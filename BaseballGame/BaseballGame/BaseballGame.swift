@@ -24,7 +24,7 @@ struct BaseballGame {
             
             guard let input = readLine(), // 사용자의 input
                   let selectedNum = Int(input), // 입력 받은 값을 Int로 변환
-                  1 <= selectedNum && selectedNum <= 3 // 입력 받은 값이 1~3 사이의 숫자인지 확인
+                  (1...3).contains(selectedNum) // 입력 받은 값이 1~3 사이의 숫자인지 확인
             else {
                 print("올바른 숫자를 입력해주세요!")
                 continue
@@ -36,7 +36,7 @@ struct BaseballGame {
             case 2: // 게임 기록 보기
                 self.printTryCount()
             case 3: // 종료하기
-//                return
+                return
             default: // 1, 2, 3을 제외한 값
                 print("올바른 숫자를 입력해주세요!")
             }
