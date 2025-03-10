@@ -12,9 +12,13 @@ struct BaseballGame {
     // 정답
     var answer: [String]?
     
+    // 시도 횟수
+    var tryCount = [Int]()
+    
     // 안내 문구
     mutating func setGame(){
         while true {
+            print()
             print("환영합니다! 원하시는 번호를 입력해주세요")
             print("1. 게임 시작하기 2. 게임 기록 보기 3. 종료하기")
             
@@ -30,18 +34,20 @@ struct BaseballGame {
             case 1: // 게임 시작하기
                 self.start()
             case 2: // 게임 기록 보기
-                return
+                self.printTryCount()
             case 3: // 종료하기
-                return
+//                return
             default: // 1, 2, 3을 제외한 값
                 print("올바른 숫자를 입력해주세요!")
             }
         }
     }
     
-    // 게임 시작
+    // 1. 게임 시작
     mutating func start() {
+        var count = 1 // 시도 횟수
         self.answer = createAnswer() // 랜덤 정답 숫자 생성
+        
         print(answer ?? "")
         print("< 게임을 시작합니다 >")
         
@@ -52,9 +58,19 @@ struct BaseballGame {
             if validationInput(input: input) { // 입력 값 검증
                 if checkAnswer(input: input) { // 정답 검증
                     print("정답입니다!")
+                    self.tryCount.append(count) // 정답일 때 시도 횟수 기록
                     break
+                } else { // 틀렸을 때
+                    count += 1
                 }
             }
+        }
+    }
+    
+    // 2. 시도 횟수 보여주기
+    func printTryCount() {
+        for (index, value) in tryCount.enumerated() {
+            print("\(index + 1)번째 게임 : 시도 횟수 - \(value)")
         }
     }
     
