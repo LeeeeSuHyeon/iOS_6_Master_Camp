@@ -85,9 +85,9 @@ struct BaseballGame {
     */
     func validationInput(input: String) -> Bool {
         if input.count != 3 { return false } // 1.
-        let a = Set(input.compactMap{Int(String($0))}.filter{$0 != 0}) // 2, 3, 4
+        let filteredInput = Set(input.compactMap{Int(String($0))}.filter{$0 != 0}) // 2, 3, 4
         
-        if a.count == 3 {
+        if filteredInput.count == 3 {
             return true
         } else { // 배열의 개수가 3개가 아니면 잘못된 값을 입력한 것
             print("올바르지 않은 입력 값입니다.")
