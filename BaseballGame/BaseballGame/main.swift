@@ -8,4 +8,4 @@
 import Foundation
 
 var baseballGame = BaseballGame()
-baseballGame.start()
+baseballGame.setGame()

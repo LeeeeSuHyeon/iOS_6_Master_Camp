@@ -12,6 +12,33 @@ struct BaseballGame {
     // 정답
     var answer: [String]?
     
+    // 안내 문구
+    mutating func setGame(){
+        while true {
+            print("환영합니다! 원하시는 번호를 입력해주세요")
+            print("1. 게임 시작하기 2. 게임 기록 보기 3. 종료하기")
+            
+            guard let input = readLine(), // 사용자의 input
+                  let selectedNum = Int(input), // 입력 받은 값을 Int로 변환
+                  1 <= selectedNum && selectedNum <= 3 // 입력 받은 값이 1~3 사이의 숫자인지 확인
+            else {
+                print("올바른 숫자를 입력해주세요!")
+                continue
+            }
+            
+            switch selectedNum {
+            case 1: // 게임 시작하기
+                self.start()
+            case 2: // 게임 기록 보기
+                return
+            case 3: // 종료하기
+                return
+            default: // 1, 2, 3을 제외한 값
+                print("올바른 숫자를 입력해주세요!")
+            }
+        }
+    }
+    
     // 게임 시작
     mutating func start() {
         self.answer = createAnswer() // 랜덤 정답 숫자 생성
