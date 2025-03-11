@@ -10,7 +10,7 @@ import Foundation
 // 상속, 참조 필요없으므로 struct 사용
 struct BaseballGame {
     // 정답
-    var answer: [String]?
+    var answer = [String]()
     
     // 시도 횟수
     var tryCount = [Int]()
@@ -33,7 +33,7 @@ struct BaseballGame {
             case 1: // 게임 시작하기
                 self.start()
             case 2: // 게임 기록 보기
-                self.printTryCount()
+                self.showTryCount()
             case 3: // 종료하기
                 print("<숫자 야구 게임을 종료합니다>")
                 return
@@ -47,14 +47,13 @@ struct BaseballGame {
     // 1. 게임 시작
     mutating func start() {
         var count = 1 // 시도 횟수
-        var flag = true // while 반복 flag
         self.answer = createAnswer() // 랜덤 정답 숫자 생성
         
-        print(answer ?? "")
+        print(answer)
         print("< 게임을 시작합니다 >")
         
         // 정답일 때까지 반복
-        while flag {
+        while true {
             print("숫자를 입력하세요")
             guard let input = readLine() else { return }
             
@@ -63,16 +62,18 @@ struct BaseballGame {
                     print("정답입니다!")
                     print()
                     self.tryCount.append(count) // 정답일 때 시도 횟수 기록
-                    flag = false
+                    break
                 } else { // 틀렸을 때
                     count += 1
                 }
+            } else {
+                print("올바르지 않은 입력 값입니다.")
             }
         }
     }
     
     // 2. 시도 횟수 보여주기
-    func printTryCount() {
+    func showTryCount() {
         for (index, value) in tryCount.enumerated() {
             print("\(index + 1)번째 게임 : 시도 횟수 - \(value)")
         }
@@ -119,33 +120,22 @@ struct BaseballGame {
         var ballCount = 0   // 볼 수
         let input = input.map{String($0)} // 사용자가 입력한 값
         
-        guard let answer = answer else { // 정답 값
-            print("정답 숫자를 먼저 생성해주세요.")
-            return false
-        }
-        
         for i in 0...2 {
             // Strike 확인
             if input[i] == answer[i] {
                 strikeCount += 1
-                continue // 중복 숫자는 없기 때문에 continue
-            }
-            
-            // Ball 확인
-            for j in 0...2 {
-                if i == j { continue } // 이미 위에서 스트라이크 처리 되었으므로 continue
-                if input[i] == answer[j] {
-                    ballCount += 1
-                    continue
-                }
+            } else { // Ball 확인
+                ballCount += answer.contains(input[i]) ? 1 : 0
             }
         }
         
         if strikeCount == 3 { // 3 스트라이크면 정답
             return true
+        } else if strikeCount == 0 && ballCount == 0 {
+            print("Nothing")
+            return false
         } else {
-            let message = strikeCount == 0 && ballCount == 0 ? "Nothing" : "\(strikeCount)스트라이크 \(ballCount)볼"
-            print(message)
+            print("\(strikeCount)스트라이크 \(ballCount)볼")
             return false
         }
     }
@@ -164,7 +154,6 @@ struct BaseballGame {
         if filteredInput.count == 3 {   // 3.
             return true
         } else { // 배열의 개수가 3개가 아니면 잘못된 값을 입력한 것
-            print("올바르지 않은 입력 값입니다.")
             return false
         }
     }
