@@ -8,75 +8,27 @@
 import Foundation
 
 // 상속, 참조 필요없으므로 struct 사용
-struct BaseballGame {
+struct BaseballGameLv2 {
     // 정답
-    var answer = [String]()
+    var answer: [String]?
     
-    // 시도 횟수
-    var tryCount = [Int]()
-    
-    // 안내 문구
-    mutating func setGame(){
-        while true {
-            print("환영합니다! 원하시는 번호를 입력해주세요")
-            print("1. 게임 시작하기 2. 게임 기록 보기 3. 종료하기")
-            
-            guard let input = readLine(), // 사용자의 input
-                  let selectedNum = Int(input), // 입력 받은 값을 Int로 변환
-                  (1...3).contains(selectedNum) // 입력 받은 값이 1~3 사이의 숫자인지 확인
-            else {
-                print("올바른 숫자를 입력해주세요!")
-                continue
-            }
-            
-            switch selectedNum {
-            case 1: // 게임 시작하기
-                self.start()
-            case 2: // 게임 기록 보기
-                self.showTryCount()
-            case 3: // 종료하기
-                print("<숫자 야구 게임을 종료합니다>")
-                return
-            default: // 1, 2, 3을 제외한 값
-                print("올바른 숫자를 입력해주세요!")
-            }
-            print()
-        }
-    }
-    
-    // 1. 게임 시작
+    // 게임 시작
     mutating func start() {
-        var count = 1 // 시도 횟수
         self.answer = createAnswer() // 랜덤 정답 숫자 생성
-        
-        print(answer)
+        print(answer ?? "")
         print("< 게임을 시작합니다 >")
         
         // 정답일 때까지 반복
-        while true {
-            print("숫자를 입력하세요")
-            guard let input = readLine() else { return }
-            
-            if validationInput(input: input) { // 입력 값 검증
-                if checkAnswer(input: input) { // 정답 검증
-                    print("정답입니다!")
-                    print()
-                    self.tryCount.append(count) // 정답일 때 시도 횟수 기록
-                    break
-                } else { // 틀렸을 때
-                    count += 1
-                }
-            } else {
-                print("올바르지 않은 입력 값입니다.")
-            }
-        }
-    }
-    
-    // 2. 시도 횟수 보여주기
-    func showTryCount() {
-        for (index, value) in tryCount.enumerated() {
-            print("\(index + 1)번째 게임 : 시도 횟수 - \(value)")
-        }
+         while true {
+             print("숫자를 입력하세요")
+             
+             if let input = readLine(), validationInput(input: input) { // 입력 값 검증
+                 if checkAnswer(input: input) { // 정답 검증
+                     print("정답입니다!")
+                     break
+                 }
+             }
+         }
     }
     
     //MARK:  Lv1. 정답 숫자 랜덤 생성 (1~9)
@@ -120,23 +72,32 @@ struct BaseballGame {
         var ballCount = 0   // 볼 수
         let input = input.map{String($0)} // 사용자가 입력한 값
         
+        guard let answer = answer else { // 정답 값
+            print("정답 숫자를 먼저 생성해주세요.")
+            return false
+        }
+        
         for i in 0...2 {
             // Strike 확인
             if input[i] == answer[i] {
                 strikeCount += 1
-            } else { // Ball 확인
-                ballCount += answer.contains(input[i]) ? 1 : 0
+                continue // 중복 숫자는 없기 때문에 continue
+            }
+            
+            // Ball 확인
+            for j in 0...2 {
+                if i == j { continue } // 이미 위에서 스트라이크 처리 되었으므로 continue
+                if input[i] == answer[j] {
+                    ballCount += 1
+                    continue
+                }
             }
         }
         
         if strikeCount == 3 { // 3 스트라이크면 정답
             return true
-        } else if strikeCount == 0 && ballCount == 0 {
-            print("Nothing")
-            return false
         } else {
-            var message = strikeCount != 0 ? "\(strikeCount)스트라이크 " : ""
-            message += ballCount != 0 ? "\(ballCount)볼" : ""
+            let message = strikeCount == 0 && ballCount == 0 ? "Nothing" : "\(strikeCount)스트라이크 \(ballCount)볼"
             print(message)
             return false
         }
