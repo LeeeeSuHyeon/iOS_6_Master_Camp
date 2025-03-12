@@ -101,19 +101,33 @@ struct BaseballGame {
 //        return Array(numSet)
 //    }
     
+    //MARK: Lv3. 정답 숫자 랜덤 생성 (0~9): Set -> Array로 수정
+//    func createAnswer() -> [String] {
+//        var numArr: [String] = [] // 자릿수를 저장할 배열
+//        while numArr.count < 3 { // 배열의 크기가 3개가 될 때까지 랜덤 숫자 추가
+//            let num = String(Int.random(in: 0...9)) // 0~9까지의 랜덤 숫자 생성
+//            if (numArr.isEmpty && num == "0") || numArr.contains(num) { continue } // 첫자리가 0이거나 이미 배열에 포함된 수(중복)이면 continue
+//            numArr.append(num) // 첫자리가 0이 아니고 중복된 수도 아니면 배열에 삽입
+//        }
+//
+//        return numArr
+//    }
     
-    //MARK:  Lv3. 정답 숫자 랜덤 생성 (0~9): Set -> Array로 수정
+    //MARK: 코드리뷰 후 변경 -> 순서가 있는 배열을 따로 생성
     func createAnswer() -> [String] {
-        var numArr: [String] = [] // 자릿수를 저장할 배열
-        while numArr.count < 3 { // 배열의 크기가 3개가 될 때까지 랜덤 숫자 추가
-            let num = String(Int.random(in: 0...9)) // 0~9까지의 랜덤 숫자 생성
-            if (numArr.isEmpty && num == "0") || numArr.contains(num) { continue } // 첫자리가 0이거나 이미 배열에 포함된 수(중복)이면 continue
-            numArr.append(num) // 첫자리가 0이 아니고 중복된 수도 아니면 배열에 삽입
+        var numArr = [String]() // 실제 정답을 저장할 배열
+        var numSet: Set<String> = [] // Set은 중복 허용 안 함, 순서 없음 -> 중복검사로만 사용
+        while numSet.count < 3 { // Set의 개수가 3개가 될 때까지 랜덤 숫자 추가
+            let num = Int.random(in: 0...9)
+            if numSet.isEmpty && num == 0 { continue } // 첫자리가 0이면 continue
+            numSet.insert(String(num)) // 0~9까지 랜덤 숫자를 생성하여 numSet에 추가 (Set은 중복 허용 안 하므로 중복 방지)
+            numArr.append(String(num)) // 실제 정답을 저장할 배열에 숫자 추가
         }
 
-        return numArr
+        return Array(numSet)
     }
     
+//
     // 정답 체크
     func checkAnswer(input: String) -> Bool {
         var strikeCount = 0 // 스트라이크 수
