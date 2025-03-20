@@ -26,3 +26,12 @@ problem3.testB() // 출력: ["가", "다", "마"]
 problem3.testC() // 출력: [1, 3, 5] / 출력: ["가", "다", "마"]
 problem3.testD() // 출력: [1, 3, 5]
 
+
+// MARK: 도전문제 1 테스트
+// HybridCar 인스턴스를 생성
+let hybridCar = HybridCar(brand: "KIA", model: "쏘렌토 하이브리드", year: "2024", engine: HydrogenEngine())
+
+// switchEngine(to:) 를 호출하여 서로 다른 타입의 엔진으로 교체
+print("이전 엔진: \(hybridCar.engine)") // 이전 엔진: Week3_Programing.HydrogenEngine
+hybridCar.switchEngine(to: ElectricEngine()) // 엔진 교체 HydrogenEngine -> ElectricEngine
+print("이후 엔진: \(hybridCar.engine)") // 이후 엔진: Week3_Programing.ElectricEngine
